@@ -1,0 +1,90 @@
+import React, { useState } from "react";
+
+const quickTopics = [
+  "Whitepaper",
+  "Platform Guide",
+  "Roadmap",
+  "Zero Upfront Cost",
+  "Creator Tips",
+  "Holder Tips",
+  "Social Media Outreach",
+  "Milestone Launch"
+];
+
+export default function ChatAIBot({ activeTab }) {
+  const [messages, setMessages] = useState([
+    { sender: "bot", text: `Hi! Ask me anything about Nft-Ultra. Select a quick topic or type your question. Active tab: ${activeTab}` }
+  ]);
+  const [input, setInput] = useState("");
+
+  function sendMessage() {
+    if (!input.trim()) return;
+    setMessages([...messages, { sender: "user", text: input }]);
+    // Simulate AI response for demo purposes
+    setTimeout(() => {
+      setMessages([
+        ...messages,
+        { sender: "user", text: input },
+        {
+          sender: "bot",
+          text: `Here's some help about "${input}": \n[AI-generated answer about ${input} and active tab: ${activeTab}]`
+        }
+      ]);
+    }, 700);
+    setInput("");
+  }
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        bottom: 24 + 110,
+        right: 24,
+        background: "#fff",
+        borderRadius: 12,
+        boxShadow: "0 0 16px #ddd",
+        width: 330,
+        zIndex: 1000,
+        padding: "1rem"
+      }}
+    >
+      <div style={{ fontWeight: "bold", marginBottom: 5 }}>Nft-Ultra Help AI Bot</div>
+      <div style={{ marginBottom: 6 }}>
+        {quickTopics.map((topic) => (
+          <button
+            key={topic}
+            onClick={() => setInput(topic)}
+            style={{
+              margin: "2px 5px",
+              padding: "2px 8px",
+              background: "#e3f2fd",
+              border: "none",
+              borderRadius: 6,
+              cursor: "pointer"
+            }}
+          >
+            {topic}
+          </button>
+        ))}
+      </div>
+      <div style={{ maxHeight: 120, overflowY: "auto", marginBottom: 7, fontSize: 14 }}>
+        {messages.map((msg, i) => (
+          <div key={i} style={{ color: msg.sender === "bot" ? "#1976d2" : "#333" }}>
+            <b>{msg.sender === "bot" ? "AI:" : "You:"}</b> {msg.text}
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: 6 }}>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type your question..."
+          style={{ flex: 1, padding: "5px 8px", borderRadius: 6, border: "1px solid #ccc" }}
+        />
+        <button onClick={sendMessage} style={{ background: "#1976d2", color: "#fff", border: "none", borderRadius: 6, padding: "5px 12px", cursor: "pointer" }}>
+          Send
+        </button>
+      </div>
+    </div>
+  );
+}

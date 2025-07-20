@@ -1,0 +1,108 @@
+import React, { useState } from "react";
+import LegendBox from "./LegendBox";
+import ChatAIBot from "./ChatAIBot";
+
+const tabNames = ["Details", "FAQ", "Community", "Analytics"];
+
+export default function NftUltraDashboard() {
+  // Tab visibility state
+  const [tabStates, setTabStates] = useState({
+    Details: true,
+    FAQ: true,
+    Community: true,
+    Analytics: true,
+  });
+
+  // Track the last active tab, default to "Details"
+  const [lastActiveTab, setLastActiveTab] = useState("Details");
+  // Find the first enabled tab as fallback
+  const activeTab = tabStates[lastActiveTab]
+    ? lastActiveTab
+    : Object.keys(tabStates).find(tab => tabStates[tab]) || "Details";
+
+  // Example tab content
+  const tabContent = {
+    Details: (
+      <div>
+        <h3>Details Tab</h3>
+        <p>All your NFT details are shown here.</p>
+      </div>
+    ),
+    FAQ: (
+      <div>
+        <h3>FAQ Tab</h3>
+        <p>Frequently asked questions and help for Nft-Ultra platform.</p>
+      </div>
+    ),
+    Community: (
+      <div>
+        <h3>Community Tab</h3>
+        <p>Connect with other holders and creators for this edition/version.</p>
+      </div>
+    ),
+    Analytics: (
+      <div>
+        <h3>Analytics Tab</h3>
+        <p>Graphs and statistics about your NFT performance and editions.</p>
+      </div>
+    ),
+  };
+
+  return (
+    <div style={{ maxWidth: 900, margin: "auto", padding: "2rem" }}>
+      {/* Main Tab Headers */}
+      <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+        {tabNames.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => tabStates[tab] && setLastActiveTab(tab)}
+            style={{
+              padding: "0.5rem 1rem",
+              background: activeTab === tab ? "#1976d2" : "#e0e0e0",
+              color: activeTab === tab ? "#fff" : "#333",
+              border: "none",
+              borderRadius: "6px 6px 0 0",
+              marginRight: "6px",
+              cursor: tabStates[tab] ? "pointer" : "not-allowed",
+              opacity: tabStates[tab] ? 1 : 0.25,
+              filter: tabStates[tab] ? "none" : "grayscale(1)",
+              pointerEvents: tabStates[tab] ? "auto" : "none",
+              fontWeight: "bold",
+              transition: "opacity 0.3s",
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Contents with visibility control */}
+      <div>
+        {tabNames.map((TabName) =>
+          activeTab === TabName ? (
+            <div
+              key={TabName}
+              style={{
+                opacity: tabStates[TabName] ? 1 : 0.25,
+                filter: tabStates[TabName] ? "none" : "grayscale(1)",
+                pointerEvents: tabStates[TabName] ? "auto" : "none",
+                transition: "opacity 0.3s",
+                minHeight: 120,
+                padding: "1rem",
+                background: "#f5f5f5",
+                borderRadius: 8,
+                marginBottom: 12,
+              }}
+            >
+              {tabContent[TabName]}
+            </div>
+          ) : null
+        )}
+      </div>
+
+      {/* LegendBox and ChatAIBot integration */}
+      <LegendBox tabStates={tabStates} setTabStates={setTabStates} />
+      <ChatAIBot activeTab={activeTab || "Details"} />
+    </div>
+  );
+}
